@@ -1,4 +1,4 @@
-## JetFire Template
+## JetFire Mailer
 
 An interface for php mail function.
 
