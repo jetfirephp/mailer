@@ -1,0 +1,27 @@
+{
+    "name": "jetfirephp/mailer",
+    "type": "library",
+    "description": "JetFire - Mail component",
+    "keywords": ["Mailer", "SwiftMailer","PHPMailer"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sumugan Sinnarasa",
+            "email": "mugan27@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0"
+    },
+    "suggest": {
+        "phpmailer/phpmailer": "Use phpmailer ~5.2",
+        "swiftmailer/swiftmailer": "Use swiftmailer stable version"
+    },
+    "autoload": {
+        "psr-4":{
+            "JetFire\\Mailer\\": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
