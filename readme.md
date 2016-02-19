@@ -27,8 +27,6 @@ $config = [
     'port' => 1025,
     'user' => '',
     'pass' => '',
-    'local' => '[http://localhost/JetFire/Mailer/]',
-    'debug' => 2
 ];
 $mailer = new SwiftMailer($config);
 // or
