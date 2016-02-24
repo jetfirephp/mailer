@@ -28,13 +28,13 @@ $config = [
     'user' => '',
     'pass' => '',
 ];
-$mailer = new SwiftMailer($config);
+$mailer = new JetFire\Mailer\SwiftMailer\SwiftMailer($config);
 // or
-// $mailer = new PhpMailer($config); 
+// $mailer = new JetFire\Mailer\PhpMailer\PhpMailer($config); 
 
-Mail::init($mailer);
+JetFire\Mailer\Mail::init($mailer);
 
-Mail::to('jet@fire.com')
+JetFire\Mailer\Mail::to('jet@fire.com')
     ->from('contact@fire.com')
     ->subject('Test')
     ->content('Test')
