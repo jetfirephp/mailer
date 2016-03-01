@@ -5,10 +5,20 @@ namespace JetFire\Mailer\PhpMailer;
 
 use JetFire\Mailer\MailerInterface;
 
+/**
+ * Class PhpMailer
+ * @package JetFire\Mailer\PhpMailer
+ */
 class PhpMailer implements MailerInterface{
 
+    /**
+     * @var \PHPMailer\PHPMailer\PHPMailer
+     */
     private $mail;
 
+    /**
+     * @var array
+     */
     private $config = [
         //smtp config
         'transport' => 'smtp',
@@ -20,11 +30,29 @@ class PhpMailer implements MailerInterface{
 
     ];
 
+    /**
+     * @param $config
+     */
     public function __construct($config){
         $this->config = array_merge($this->config,$config);
         $this->mail = new \PHPMailer\PHPMailer\PHPMailer();
     }
 
+    /**
+     * @return \PHPMailer\PHPMailer\PHPMailer
+     */
+    public function getMail(){
+        return $this->mail;
+    }
+
+    /**
+     * @param null $to
+     * @param null $from
+     * @param null $subject
+     * @param null $content
+     * @param null $file
+     * @return bool
+     */
     public function send($to = null, $from = null, $subject = null, $content = null, $file = null)
     {
         if(is_null($to)){
@@ -34,10 +62,22 @@ class PhpMailer implements MailerInterface{
                 return true;
             }
             return false;
+        }elseif(!is_null($to) && !is_null($from) && !is_null($subject) && !is_null($content)) {
+            $this->subject($subject);
+            $this->from($from);
+            $this->to($to);
+            $this->content($content);
+            if (!is_null($file)) $this->file($file);
+            $this->mail->send();
+            $this->mail = new \PHPMailer\PHPMailer\PHPMailer();
+            return true;
         }
         return false;
     }
 
+    /**
+     *
+     */
     private function config(){
         switch($this->config['transport']){
             case 'smtp':
@@ -62,6 +102,9 @@ class PhpMailer implements MailerInterface{
         }
     }
 
+    /**
+     * @return $this
+     */
     public function from()
     {
         $args = func_get_args();
@@ -71,12 +114,19 @@ class PhpMailer implements MailerInterface{
         return $this;
     }
 
+    /**
+     * @param $subject
+     * @return $this
+     */
     public function subject($subject)
     {
         $this->mail->Subject = $subject;
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function to()
     {
         $args = func_get_args();
@@ -92,6 +142,9 @@ class PhpMailer implements MailerInterface{
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function addTo()
     {
         $args = func_get_args();
@@ -101,6 +154,9 @@ class PhpMailer implements MailerInterface{
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function cc()
     {
         $args = func_get_args();
@@ -110,6 +166,9 @@ class PhpMailer implements MailerInterface{
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function addCc()
     {
         $args = func_get_args();
@@ -119,6 +178,9 @@ class PhpMailer implements MailerInterface{
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function bcc()
     {
         $args = func_get_args();
@@ -128,6 +190,9 @@ class PhpMailer implements MailerInterface{
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function addBcc()
     {
         $args = func_get_args();
@@ -137,12 +202,20 @@ class PhpMailer implements MailerInterface{
         return $this;
     }
 
+    /**
+     * @param $content
+     * @return $this
+     */
     public function content($content)
     {
         $this->mail->Body = $content;
         return $this;
     }
 
+    /**
+     * @param $html
+     * @return $this
+     */
     public function html($html)
     {
         $this->mail->isHTML(true);
@@ -150,11 +223,20 @@ class PhpMailer implements MailerInterface{
         return $this;
     }
 
+    /**
+     * @param $content
+     * @return $this
+     */
     public function addPart($content){
         $this->mail->AltBody = $content;
         return $this;
     }
 
+    /**
+     * @param $file
+     * @param null $name
+     * @return $this
+     */
     public function file($file, $name = null)
     {
         is_null($name)

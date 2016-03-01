@@ -14,6 +14,7 @@ use Swift_SmtpTransport;
 class SwiftMailer implements MailerInterface{
 
     private $message;
+    private $mailer;
     private $config = [
         //smtp config
         'transport' => 'smtp',
@@ -26,6 +27,7 @@ class SwiftMailer implements MailerInterface{
 
     public function __construct($config){
         $this->config = array_merge($this->config,$config);
+        $this->mailer = Swift_Mailer::newInstance(call_user_func($this->getTransport()));
     }
 
     private function getTransport(){
@@ -57,12 +59,37 @@ class SwiftMailer implements MailerInterface{
         };
     }
 
-    public function send($subject = null, $from = null, $to = null, $content = null, $file = null)
+    /**
+     * @return mixed
+     */
+    public function getMail(){
+        return $this->message;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMailer(){
+        return $this->mailer;
+    }
+
+    public function send($to = null,$from = null,$subject = null,$content = null, $file = null)
     {
         if(is_null($to)) {
-            Swift_Mailer::newInstance(call_user_func($this->getTransport()))->send($this->message);
+            $this->mailer->send($this->message);
+            $this->message = null;
+            return true;
+        }elseif(!is_null($to) && !is_null($from) && !is_null($subject) && !is_null($content)) {
+            $this->subject($subject);
+            $this->from($from);
+            $this->to($to);
+            $this->content($content);
+            if (!is_null($file)) $this->file($file);
+            $this->mailer->send($this->message);
+            $this->message = null;
             return true;
         }
+        return false;
     }
 
     public function subject($subject)

@@ -31,6 +31,6 @@ interface MailerInterface {
 
     public function file($file,$name = null);
 
+    public function getMail();
 
-
-} 
+}
