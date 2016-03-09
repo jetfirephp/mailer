@@ -21,6 +21,8 @@ class Mail {
     public function __call($name,$args){
         if(method_exists(self::$mailer,$name))
             call_user_func_array([self::$mailer,$name],$args);
+        else
+            call_user_func_array([self::$mailer->getMail(),$name],$args);
         return self::getInstance();
     }
 

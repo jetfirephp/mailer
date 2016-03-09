@@ -8,6 +8,7 @@ use Swift_Attachment;
 use Swift_Mailer;
 use Swift_MailTransport;
 use Swift_Message;
+use Swift_Preferences;
 use Swift_SendmailTransport;
 use Swift_SmtpTransport;
 
@@ -22,12 +23,14 @@ class SwiftMailer implements MailerInterface{
         'user' => '',
         'pass' => '',
         //sendmail config
-        'command' => '/usr/sbin/sendmail -bs'
+        'command' => '/usr/sbin/sendmail -bs',
+        'charset' => 'UTF-8',
     ];
 
     public function __construct($config){
         $this->config = array_merge($this->config,$config);
         $this->mailer = Swift_Mailer::newInstance(call_user_func($this->getTransport()));
+        Swift_Preferences::getInstance()->setCharset($this->config['charset']);
     }
 
     private function getTransport(){

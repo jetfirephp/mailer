@@ -26,7 +26,8 @@ class PhpMailer implements MailerInterface{
         'user' => 'user',
         'pass' => 'pass',
         //sendmail config
-        'command' => '/usr/sbin/sendmail -bs'
+        'command' => '/usr/sbin/sendmail -bs',
+        'charset' => 'UTF-8',
 
     ];
 
@@ -79,6 +80,9 @@ class PhpMailer implements MailerInterface{
      *
      */
     private function config(){
+        if(isset($this->config['lang']['local']) && isset($this->config['lang']['path']))
+            $this->mail->setLanguage($this->config['lang']['local'], $this->config['lang']['path']);
+        $this->mail->CharSet = $this->config['charset'];
         switch($this->config['transport']){
             case 'smtp':
                 $this->mail->isSMTP();
