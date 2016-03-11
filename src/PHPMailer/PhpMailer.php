@@ -112,9 +112,13 @@ class PhpMailer implements MailerInterface{
     public function from()
     {
         $args = func_get_args();
-        (func_num_args() == 1)
-            ? $this->mail->setFrom($args[0])
-            : $this->mail->setFrom($args[0],$args[1]);
+        if(isset($args[1]))
+             $this->mail->setFrom($args[0],$args[1]);
+        else {
+            if(is_array($args[0]))
+                foreach($args[0] as $name => $address)
+                    $this->mail->setFrom($name,$address);
+        }
         return $this;
     }
 

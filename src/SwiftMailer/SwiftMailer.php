@@ -66,6 +66,8 @@ class SwiftMailer implements MailerInterface{
      * @return mixed
      */
     public function getMail(){
+        if(is_null($this->message))
+            $this->message = Swift_Message::newInstance();
         return $this->message;
     }
 
@@ -97,30 +99,23 @@ class SwiftMailer implements MailerInterface{
 
     public function subject($subject)
     {
-        if(is_null($this->message))
-            $this->message = Swift_Message::newInstance();
-        else
-            $this->message->setSubject($subject);
+        $this->getMail()->setSubject($subject);
     }
 
     public function from()
     {
-        if(is_null($this->message))
-            $this->message = Swift_Message::newInstance();
         $args = func_get_args();
         (func_num_args() == 2)
-            ? $this->message->setFrom($args[0],$args[1])
-            : $this->message->setFrom($args);
+            ? $this->getMail()->setFrom([$args[0] => $args[1]])
+            : $this->getMail()->setFrom($args[0]);
     }
 
     public function to()
     {
-        if(is_null($this->message))
-            $this->message = Swift_Message::newInstance();
         $args = func_get_args();
-        (func_num_args() == 1)
-            ? $this->message->setFrom($args[0])
-            : $this->message->setFrom($args);
+        (func_num_args() == 2)
+            ? $this->getMail()->setTo([$args[0] => $args[1]])
+            : $this->getMail()->setTo($args[0]);
     }
 
     public function addTo()
@@ -128,15 +123,15 @@ class SwiftMailer implements MailerInterface{
         $args = func_get_args();
         (func_num_args() == 2)
             ? $this->message->addTo($args[0],$args[1])
-            : $this->message->addTo($args);
+            : $this->message->addTo($args[0]);
     }
 
     public function cc()
     {
         $args = func_get_args();
-        (func_num_args() == 1)
-            ? $this->message->setCc($args[0])
-            : $this->message->setCc($args);
+        (func_num_args() == 2)
+            ? $this->message->setCc([$args[0] => $args[1]])
+            : $this->message->setCc($args[0]);
     }
 
     public function addCc()
@@ -144,15 +139,15 @@ class SwiftMailer implements MailerInterface{
         $args = func_get_args();
         (func_num_args() == 2)
             ? $this->message->addCc($args[0],$args[1])
-            : $this->message->addCc($args);
+            : $this->message->addCc($args[0]);
     }
 
     public function bcc()
     {
         $args = func_get_args();
-        (func_num_args() == 1)
-            ? $this->message->setBcc($args[0])
-            : $this->message->setBcc($args);
+        (func_num_args() == 2)
+            ? $this->message->setBcc([$args[0] => $args[1]])
+            : $this->message->setBcc($args[0]);
     }
 
     public function addBcc()
@@ -160,7 +155,7 @@ class SwiftMailer implements MailerInterface{
         $args = func_get_args();
         (func_num_args() == 2)
             ? $this->message->addBcc($args[0],$args[1])
-            : $this->message->addBcc($args);
+            : $this->message->addBcc($args[0]);
     }
 
     public function content($content)
