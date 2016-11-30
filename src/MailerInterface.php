@@ -2,7 +2,6 @@
 
 namespace JetFire\Mailer;
 
-
 /**
  * Interface MailerInterface
  * @package JetFire\Mailer

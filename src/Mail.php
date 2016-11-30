@@ -6,54 +6,61 @@ namespace JetFire\Mailer;
 /**
  * Class Mail
  * @package JetFire\Mailer
+ * @method object to(...$value)
+ * @method \PHPMailer\PHPMailer\PHPMailer|mixed getMail()
  */
-class Mail {
+class Mail
+{
 
     /**
-     * @var \JetFire\Mailer\PHPMailer\PhpMailer | \JetFire\Mailer\SwiftMailer\SwiftMailer
+     * @var MailerInterface
      */
-    private static $mailer;
+    private $mailer;
     /**
      * @var
      */
     private static $instance;
 
     /**
+     * Mail constructor.
+     * @param MailerInterface $mailer
+     */
+    public function __construct(MailerInterface $mailer)
+    {
+        self::$instance = $this;
+        $this->mailer = $mailer;
+    }
+
+    /**
      * @return Mail
      */
-    public static function getInstance(){
-        if(is_null(self::$instance))
-            self::$instance = new self;
+    public static function getInstance()
+    {
         return self::$instance;
     }
 
     /**
-     * @param MailerInterface $mailer
+     * @param $name
+     * @param $arguments
+     * @return MailerInterface
      */
-    public static function init(MailerInterface $mailer){
-        self::$mailer = $mailer;
+    public function __call($name, $arguments)
+    {
+        return (method_exists($this->mailer, $name))
+            ? call_user_func_array([$this->mailer, $name], $arguments)
+            : call_user_func_array([$this->mailer->getMail(), $name], $arguments);
     }
 
     /**
      * @param $name
-     * @param $args
-     * @return mixed
+     * @param $arguments
+     * @return MailerInterface
      */
-    public function __call($name,$args){
-        return (method_exists(self::$mailer,$name))
-            ? call_user_func_array([self::$mailer,$name],$args)
-            : call_user_func_array([self::$mailer->getMail(),$name],$args);
-    }
-
-    /**
-     * @param $name
-     * @param $args
-     * @return mixed
-     */
-    public static function __callStatic($name,$args){
-        return (method_exists(self::$mailer,$name))
-            ? call_user_func_array([self::$mailer,$name],$args)
-            : call_user_func_array([self::$mailer->getMail(),$name],$args);
+    public static function __callStatic($name, $arguments)
+    {
+        return (method_exists(self::getInstance()->mailer, $name))
+            ? call_user_func_array([self::getInstance()->mailer, $name], $arguments)
+            : call_user_func_array([self::getInstance()->mailer->getMail(), $name], $arguments);
     }
 
 } 

@@ -32,9 +32,9 @@ $mailer = new JetFire\Mailer\SwiftMailer\SwiftMailer($config);
 // or
 // $mailer = new JetFire\Mailer\PhpMailer\PhpMailer($config); 
 
-JetFire\Mailer\Mail::init($mailer);
+$mail = new JetFire\Mailer\Mail($mailer);
 
-JetFire\Mailer\Mail::to('jet@fire.com')
+$mail->to('jet@fire.com')
     ->from('contact@fire.com')
     ->subject('Test')
     ->content('Test')
