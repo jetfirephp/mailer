@@ -15,7 +15,7 @@ class Mail
     /**
      * @var MailerInterface
      */
-    private $mailer;
+    protected $mailer;
     /**
      * @var
      */
